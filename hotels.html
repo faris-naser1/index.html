@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Hotel - MatchTicketing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="navbar">
+    <div class="container">
+        <a href="index.html" class="logo">MatchTicketing</a>
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Match Tickets</a></li>
+            <li><a class="active" href="hotels.html"><i class="fas fa-hotel"></i> Hotels</a></li>
+            <li><a href="transport.html"><i class="fas fa-bus"></i> Transport</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="login.html" class="btn-login"><i class="fas fa-user"></i> Login</a></li>
+            <li><a href="register.php" class="btn-register"><i class="fas fa-user-plus"></i> Register</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ===== Page Header ===== -->
+<section class="page-header">
+    <div class="container">
+        <h1>Book Your Hotel</h1>
+        <p>Reserve your stay easily and securely</p>
+    </div>
+</section>
+
+<!-- ===== Booking Section ===== -->
+<div class="booking-container">
+
+    <!-- Booking Form -->
+    <div class="booking-form">
+        <h2>Hotel Booking Details</h2>
+
+        <form action="php/book_hotel.php" method="POST">
+            <div class="form-group">
+                <label>Hotel Name</label>
+                <input type="text" name="hotel_name" value="Grand Stadium Hotel" required>
+            </div>
+
+            <div class="form-group">
+                <label>Check-in Date</label>
+                <input type="date" id="check_in" name="check_in" required>
+            </div>
+
+            <div class="form-group">
+                <label>Check-out Date</label>
+                <input type="date" id="check_out" name="check_out" required>
+            </div>
+
+            <div class="form-group">
+                <label>Room Type</label>
+                <select id="room_type" name="room_type" required>
+                    <option value="">Select Room</option>
+                    <option value="single">Single</option>
+                    <option value="double">Double</option>
+                    <option value="suite">Suite</option>
+                    <option value="deluxe">Deluxe Suite</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Guests</label>
+                <input type="number" id="guests" name="guests" min="1" max="4" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Price per Night ($)</label>
+                <input type="number" id="room_price" name="room_price" value="120" required>
+            </div>
+
+            <input type="hidden" id="total_input" name="total_amount">
+
+            <button type="submit" class="btn-primary">Confirm Booking</button>
+        </form>
+    </div>
+
+    <!-- Booking Summary -->
+    <div class="booking-summary">
+        <h3>Booking Summary</h3>
+
+        <div class="summary-item">
+            <span>Room:</span>
+            <span id="summary_room">-</span>
+        </div>
+
+        <div class="summary-item">
+            <span>Nights:</span>
+            <span id="summary_nights">0</span>
+        </div>
+
+        <div class="summary-item">
+            <span>Guests:</span>
+            <span id="summary_guests">1</span>
+        </div>
+
+        <div class="summary-item total">
+            <span>Total:</span>
+            <span id="summary_total">$0.00</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MatchTicketing</h3>
+                <p>Your one-stop solution for sports events</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="tickets.html">Tickets</a></li>
+                    <li><a href="hotels.html">Hotels</a></li>
+                    <li><a href="transport.html">Transport</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> support@matchticketing.com</p>
+                <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MatchTicketing. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const roomType = document.getElementById('room_type');
+    const checkIn = document.getElementById('check_in');
+    const checkOut = document.getElementById('check_out');
+    const guests = document.getElementById('guests');
+    const price = document.getElementById('room_price');
+
+    function updateSummary() {
+        document.getElementById('summary_room').textContent =
+            roomType.options[roomType.selectedIndex]?.text || '-';
+
+        document.getElementById('summary_guests').textContent = guests.value;
+
+        if (checkIn.value && checkOut.value) {
+            const nights = Math.max(
+                0,
+                (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24)
+            );
+            document.getElementById('summary_nights').textContent = nights;
+
+            const total = nights * (parseFloat(price.value) || 0);
+            document.getElementById('summary_total').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('total_input').value = total.toFixed(2);
+        }
+    }
+
+    [roomType, checkIn, checkOut, guests, price].forEach(el =>
+        el.addEventListener('change', updateSummary)
+    );
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatchTicketing - Your Sports Experience</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/indexstyle.css">
+
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-ticket-alt"></i>
+                <span>MatchTicketing</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="tickets.php"><i class="fas fa-ticket-alt"></i> Match Tickets</a></li>
+                <li><a href="hotels.php"><i class="fas fa-hotel"></i> Hotels</a></li>
+                <li><a href="transport.php"><i class="fas fa-bus"></i> Transport</a></li>
+                       <li><a href="tour-guides.php"><i class="fas fa-bus"></i> Tour Guides</a></li>
+                <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact</a></li>
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <li><a href="dashboard.php" class="btn-login">
+                        <i class="fas fa-user"></i> <?php echo $_SESSION['full_name'] ?? 'Dashboard'; ?>
+                    </a></li>
+                    <li><a href="logout.php" class="btn-register">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a></li>
+                <?php else: ?>
+                    <li><a href="login.php" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a></li>
+                    <li><a href="register.php" class="btn-register">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a></li>
+                <?php endif; ?>
+             <li><a href="Admin.php" class="active"><i class="fas fa-user"></i> Admin</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in">Experience the Thrill Live</h1>
+            <p class="fade-in delay-1">Book match tickets, hotels, and transportation all in one place</p>
+            <a href="tickets.php" class="btn-primary fade-in delay-2">
+                <i class="fas fa-ticket-alt"></i> Browse Matches
+            </a>
+        </div>
+    </section>
+
+    
+
+    <!-- Services -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>Match Tickets</h3>
+                    <p>Secure your seat for the biggest matches</p>
+                </div>
+                <div class="service-card fade-in delay-1">
+                    <i class="fas fa-hotel"></i>
+                    <h3>Hotel Booking</h3>
+                    <p>Comfortable stays near stadiums</p>
+                </div>
+                <div class="service-card fade-in delay-2">
+                    <i class="fas fa-shuttle-van"></i>
+                    <h3>Transportation</h3>
+                    <p>Metro, bus, and car rentals</p>
+                </div>
+                <div class="service-card fade-in delay-3">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Payment</h3>
+                    <p>Multiple safe payment options</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="fade-in">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MatchTicketing</h3>
+                    <p>Your one-stop solution for sports events</p>
+                    <p><i class="fas fa-envelope"></i> support@matchticketing.com</p>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="tickets.php">Match Tickets</a></li>
+                        <li><a href="hotels.php">Hotels</a></li>
+                        <li><a href="transport.php">Transport</a></li>
+                        <li><a href="contact.php">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <a href="#" class="text-white" style="font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white" style="font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white" style="font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white" style="font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MatchTicketing. All rights reserved. | 
+                   <a href="privacy.html" class="text-light">Privacy Policy</a> | 
+                   <a href="terms.html" class="text-light">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navbar')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            // Add active class to current page link
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinksList = document.querySelectorAll('.nav-links a');
+            
+            navLinksList.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+
+            // Check user login status
+            function checkLoginStatus() {
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                if (userData.loggedIn) {
+                    // Update UI for logged in user
+                    const loginLinks = document.querySelectorAll('.btn-login, .btn-register');
+                    loginLinks.forEach(link => link.style.display = 'none');
+                }
+            }
+
+            // Initialize
+            checkLoginStatus();
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>

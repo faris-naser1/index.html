@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - MatchTicketing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .register-container {
+            max-width: 600px;
+            margin: 100px auto 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 5px;
+            background-color: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+            color: #666;
+        }
+
+        .strength-weak { background-color: #ff4757; }
+        .strength-fair { background-color: #ffa502; }
+        .strength-good { background-color: #2ed573; }
+        .strength-strong { background-color: #1e90ff; }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin: 1.5rem 0;
+        }
+
+        .terms input {
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .terms label {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .terms a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">MatchTicketing</a>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="index.html#tickets"><i class="fas fa-ticket-alt"></i> Match Tickets</a></li>
+                <li><a href="hotels.html"><i class="fas fa-hotel"></i> Hotels</a></li>
+                <li><a href="transport.html"><i class="fas fa-bus"></i> Transport</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> Register</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="register-container">
+        <h2>Create Your Account</h2>
+        
+        <!-- Display PHP errors if any -->
+        <?php if(isset($_SESSION['errors'])): ?>
+        <div class="error-message">
+            <ul style="text-align: left; margin-left: 1rem;">
+                <?php foreach($_SESSION['errors'] as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php unset($_SESSION['errors']); endif; ?>
+
+        <!-- Display success message if redirected from registration -->
+        <?php if(isset($_SESSION['success'])): ?>
+        <div class="success-message">
+            <?php echo htmlspecialchars($_SESSION['success']); ?>
+        </div>
+        <?php unset($_SESSION['success']); endif; ?>
+
+        <form id="registerForm" action="register.php" method="POST" >
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name *</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                    <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last_name">Last Name *</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                    <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" required>
+                <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                <small style="color: #666; font-size: 0.8rem;">Must be 3-20 characters, letters and numbers only</small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth *</label>
+                    <input type="date" id="dob" name="dob"  >
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">Password strength</div>
+                    <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                    <small style="color: #666; font-size: 0.8rem;">Minimum 8 characters with uppercase, lowercase, number and special character</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password *</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country *</label>
+                <select id="country" name="country" required>
+                    <option value="">Select Country</option>
+                    <option value="US">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="IT">Italy</option>
+                    <option value="ES">Spain</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">China</option>
+                    <option value="IN">India</option>
+                    <option value="BR">Brazil</option>
+                    <option value="MX">Mexico</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="EG">Egypt</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="AE">United Arab Emirates</option>
+                </select>
+                <div class="error-feedback" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.2rem;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="2"></textarea>
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a> *
+                </label>
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="newsletter" name="newsletter" checked>
+                <label for="newsletter">
+                    I want to receive news, updates, and special offers via email
+                </label>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%;">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="login-link">
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <p style="font-size: 0.9rem; color: #666;">By registering, you can:</p>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <i class="fas fa-ticket-alt" style="color: var(--primary); font-size: 1.2rem;"></i>
+                    <p style="font-size: 0.8rem;">Book Tickets</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-hotel" style="color: var(--primary); font-size: 1.2rem;"></i>
+                    <p style="font-size: 0.8rem;">Reserve Hotels</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-bus" style="color: var(--primary); font-size: 1.2rem;"></i>
+                    <p style="font-size: 0.8rem;">Arrange Transport</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-history" style="color: var(--primary); font-size: 1.2rem;"></i>
+                    <p style="font-size: 0.8rem;">Track Bookings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const dobInput = document.getElementById('dob');
+
+            // Set max date for date of birth (18 years ago)
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            dobInput.max = maxDate.toISOString().split('T')[0];
+
+            // Password strength checker
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                let text = 'Password strength';
+
+                // Check password length
+                if (password.length >= 8) strength++;
+                if (password.length >= 12) strength++;
+
+                // Check for character variety
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                // Update strength bar
+                let width = 0;
+                let colorClass = '';
+                let textColor = '';
+
+                if (password.length === 0) {
+                    width = 0;
+                    text = 'Password strength';
+                    colorClass = '';
+                    textColor = '#666';
+                } else if (strength <= 2) {
+                    width = 25;
+                    text = 'Weak';
+                    colorClass = 'strength-weak';
+                    textColor = '#ff4757';
+                } else if (strength <= 4) {
+                    width = 50;
+                    text = 'Fair';
+                    colorClass = 'strength-fair';
+                    textColor = '#ffa502';
+                } else if (strength <= 6) {
+                    width = 75;
+                    text = 'Good';
+                    colorClass = 'strength-good';
+                    textColor = '#2ed573';
+                } else {
+                    width = 100;
+                    text = 'Strong';
+                    colorClass = 'strength-strong';
+                    textColor = '#1e90ff';
+                }
+
+                strengthBar.style.width = width + '%';
+                strengthBar.className = 'strength-bar ' + colorClass;
+                strengthText.textContent = text;
+                strengthText.style.color = textColor;
+            });
+
+            // Real-time validation
+            usernameInput.addEventListener('blur', function() {
+                validateUsername(this);
+            });
+
+            emailInput.addEventListener('blur', function() {
+                validateEmail(this);
+            });
+
+            phoneInput.addEventListener('blur', function() {
+                validatePhone(this);
+            });
+
+            confirmPasswordInput.addEventListener('input', function() {
+                validatePasswordMatch();
+            });
+
+            // Validation functions
+            function validateUsername(input) {
+                const value = input.value.trim();
+                const regex = /^[a-zA-Z0-9_]{3,20}$/;
+                const errorDiv = input.nextElementSibling;
+                
+                if (!value) {
+                    errorDiv.textContent = 'Username is required';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                if (!regex.test(value)) {
+                    errorDiv.textContent = 'Username must be 3-20 characters (letters, numbers, underscore only)';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                errorDiv.textContent = '';
+                input.classList.remove('error');
+                return true;
+            }
+
+            function validateEmail(input) {
+                const value = input.value.trim();
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const errorDiv = input.nextElementSibling;
+                
+                if (!value) {
+                    errorDiv.textContent = 'Email is required';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                if (!regex.test(value)) {
+                    errorDiv.textContent = 'Please enter a valid email address';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                errorDiv.textContent = '';
+                input.classList.remove('error');
+                return true;
+            }
+
+            function validatePhone(input) {
+                const value = input.value.trim();
+                const regex = /^[\+]?[1-9][\d]{0,15}$/;
+                const errorDiv = input.nextElementSibling;
+                
+                if (!value) {
+                    errorDiv.textContent = 'Phone number is required';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                if (!regex.test(value.replace(/[\s\-\(\)]/g, ''))) {
+                    errorDiv.textContent = 'Please enter a valid phone number';
+                    input.classList.add('error');
+                    return false;
+                }
+                
+                errorDiv.textContent = '';
+                input.classList.remove('error');
+                return true;
+            }
+
+            function validatePasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const errorDiv = confirmPasswordInput.nextElementSibling;
+                
+                if (password !== confirmPassword) {
+                    errorDiv.textContent = 'Passwords do not match';
+                    confirmPasswordInput.classList.add('error');
+                    return false;
+                }
+                
+                errorDiv.textContent = '';
+                confirmPasswordInput.classList.remove('error');
+                return true;
+            }
+
+            // Form submission validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                
+                // Validate all required fields
+                const requiredInputs = form.querySelectorAll('input[required], select[required]');
+                requiredInputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        if (!input.checked) {
+                            isValid = false;
+                            input.parentElement.style.color = 'var(--danger)';
+                        } else {
+                            input.parentElement.style.color = '';
+                        }
+                    } else if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('error');
+                        const errorDiv = input.nextElementSibling;
+                        if (errorDiv && errorDiv.classList.contains('error-feedback')) {
+                            errorDiv.textContent = 'This field is required';
+                        }
+                    }
+                });
+
+                // Validate username
+                if (!validateUsername(usernameInput)) isValid = false;
+                
+                // Validate email
+                if (!validateEmail(emailInput)) isValid = false;
+                
+                // Validate phone
+                if (!validatePhone(phoneInput)) isValid = false;
+                
+                // Validate password strength
+                const password = passwordInput.value;
+                if (password.length < 8) {
+                    isValid = false;
+                    passwordInput.classList.add('error');
+                    const errorDiv = passwordInput.nextElementSibling.nextElementSibling.nextElementSibling;
+                    errorDiv.textContent = 'Password must be at least 8 characters';
+                }
+                
+                // Validate password match
+                if (!validatePasswordMatch()) isValid = false;
+                
+                // Validate terms agreement
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    isValid = false;
+                    termsCheckbox.parentElement.style.color = 'var(--danger)';
+                }
+                
+                if (isValid) {
+                    // Show loading state
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+                    submitBtn.disabled = true;
+                    
+                    // Submit form
+                    this.submit();
+                }
+            });
+
+            // Real-time checkbox validation
+            const termsCheckbox = document.getElementById('terms');
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.parentElement.style.color = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

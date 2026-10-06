@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Tickets - TicketHub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .booking-container {
+            max-width: 1000px;
+            margin: 100px auto 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .booking-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .booking-summary {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .ticket-info {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #2563eb;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .price-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .payment-options {
+            margin: 1.5rem 0;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #2563eb;
+        }
+
+        .payment-option.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .payment-option input {
+            margin-right: 1rem;
+        }
+
+        .payment-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #2563eb;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2563eb;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-ticket-alt"></i>
+                <span>TicketHub</span>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="tickets.php">Tickets</a>
+                <a href="hotels.html">Hotels</a>
+                <a href="transport.html">Transport</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html" class="btn">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </nav>
+            <div class="menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Booking Page -->
+    <div class="booking-container">
+        <!-- Booking Form -->
+        <div class="booking-form">
+            <h2>Book Your Ticket</h2>
+            
+            <!-- Ticket Information -->
+            <div class="ticket-info" id="ticketInfo">
+                <div class="info-row">
+                    <span class="info-label">Match:</span>
+                    <span class="info-value" id="matchName">Champions League Final</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value" id="matchDate">June 1, 2024</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Venue:</span>
+                    <span class="info-value" id="matchVenue">Wembley Stadium, London</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Base Price:</span>
+                    <span class="info-value" id="basePrice">$199.99</span>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <form id="bookingForm" action="php/book_ticket.php" method="POST">
+                <input type="hidden" name="match_id" id="matchId" value="">
+                <input type="hidden" name="match_name" id="matchNameInput">
+                <input type="hidden" name="match_date" id="matchDateInput">
+                <input type="hidden" name="venue" id="venueInput">
+                <input type="hidden" name="base_price" id="basePriceInput">
+                
+                <div class="form-group">
+                    <label for="quantity">Number of Tickets</label>
+                    <input type="number" id="quantity" name="quantity" min="1" max="10" value="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="seat_category">Seat Category</label>
+                    <select id="seat_category" name="seat_category" required>
+                        <option value="">Select Seat Category</option>
+                        <option value="general">General Admission - $199.99</option>
+                        <option value="premium">Premium Seating - $299.99</option>
+                        <option value="vip">VIP Box - $499.99</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="payment-options">
+                    <h3>Payment Method</h3>
+                    <div class="payment-option" onclick="selectPayment('credit_card')">
+                        <input type="radio" name="payment_method" value="credit_card" required>
+                        <i class="fas fa-credit-card payment-icon"></i>
+                        <div>
+                            <strong>Credit/Debit Card</strong>
+                            <p style="color: #6b7280; font-size: 0.9rem;">Pay with Visa, Mastercard, or American Express</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-option" onclick="selectPayment('paypal')">
+                        <input type="radio" name="payment_method" value="paypal">
+                        <i class="fab fa-paypal payment-icon"></i>
+                        <div>
+                            <strong>PayPal</strong>
+                            <p style="color: #6b7280; font-size: 0.9rem;">Pay with your PayPal account</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-option" onclick="selectPayment('bank_transfer')">
+                        <input type="radio" name="payment_method" value="bank_transfer">
+                        <i class="fas fa-university payment-icon"></i>
+                        <div>
+                            <strong>Bank Transfer</strong>
+                            <p style="color: #6b7280; font-size: 0.9rem;">Transfer directly to our bank account</p>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="total_amount" id="totalAmountInput">
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                    <i class="fas fa-lock"></i> Complete Booking
+                </button>
+            </form>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+            <h3>Booking Summary</h3>
+            
+            <div class="summary-item">
+                <span>Tickets:</span>
+                <span id="summaryQuantity">1</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Seat Category:</span>
+                <span id="summaryCategory">General</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Price per Ticket:</span>
+                <span id="summaryPrice">$199.99</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Service Fee:</span>
+                <span id="serviceFee">$5.00</span>
+            </div>
+            
+            <div class="summary-item total">
+                <span>Total Amount:</span>
+                <span id="totalAmount">$204.99</span>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                <h4><i class="fas fa-info-circle"></i> Important Information</h4>
+                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; font-size: 0.9rem; color: #475569;">
+                    <li>E-tickets will be sent to your email</li>
+                    <li>No refunds after purchase</li>
+                    <li>Arrive at least 1 hour before match</li>
+                    <li>Valid ID required for entry</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Get ticket data from URL or localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there's ticket data in URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const matchId = urlParams.get('match_id') || '1';
+            const matchName = urlParams.get('match_name') || 'Champions League Final';
+            const matchDate = urlParams.get('match_date') || '2024-06-01';
+            const venue = urlParams.get('venue') || 'Wembley Stadium, London';
+            const basePrice = urlParams.get('price') || '199.99';
+
+            // Set ticket information
+            document.getElementById('matchName').textContent = matchName;
+            document.getElementById('matchDate').textContent = formatDate(matchDate);
+            document.getElementById('matchVenue').textContent = venue;
+            document.getElementById('basePrice').textContent = '$' + basePrice;
+
+            // Set hidden inputs
+            document.getElementById('matchId').value = matchId;
+            document.getElementById('matchNameInput').value = matchName;
+            document.getElementById('matchDateInput').value = matchDate;
+            document.getElementById('venueInput').value = venue;
+            document.getElementById('basePriceInput').value = basePrice;
+
+            // Initialize calculations
+            updateSummary();
+            updateTotal();
+
+            // Set default payment method
+            selectPayment('credit_card');
+        });
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Calculate total
+        function updateTotal() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const seatCategory = document.getElementById('seat_category').value;
+            
+            // Get base price
+            const basePrice = parseFloat(document.getElementById('basePriceInput').value) || 199.99;
+            
+            // Calculate price based on seat category
+            let pricePerTicket = basePrice;
+            if (seatCategory === 'premium') pricePerTicket = 299.99;
+            if (seatCategory === 'vip') pricePerTicket = 499.99;
+            
+            // Service fee
+            const serviceFee = 5.00;
+            
+            // Calculate total
+            const subtotal = pricePerTicket * quantity;
+            const total = subtotal + serviceFee;
+            
+            // Update display
+            document.getElementById('summaryPrice').textContent = '$' + pricePerTicket.toFixed(2);
+            document.getElementById('serviceFee').textContent = '$' + serviceFee.toFixed(2);
+            document.getElementById('totalAmount').textContent = '$' + total.toFixed(2);
+            
+            // Update hidden input
+            document.getElementById('totalAmountInput').value = total.toFixed(2);
+            
+            return total;
+        }
+
+        // Update summary
+        function updateSummary() {
+            const quantity = document.getElementById('quantity').value;
+            const seatCategory = document.getElementById('seat_category');
+            const categoryText = seatCategory.options[seatCategory.selectedIndex]?.text || 'General';
+            
+            document.getElementById('summaryQuantity').textContent = quantity;
+            document.getElementById('summaryCategory').textContent = categoryText.split(' - ')[0];
+            
+            updateTotal();
+        }
+
+        // Select payment method
+        function selectPayment(method) {
+            // Remove selected class from all
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked
+            const selectedOption = document.querySelector(`[value="${method}"]`).parentElement;
+            selectedOption.classList.add('selected');
+            
+            // Check the radio button
+            document.querySelector(`[value="${method}"]`).checked = true;
+        }
+
+        // Event listeners
+        document.getElementById('quantity').addEventListener('change', updateSummary);
+        document.getElementById('quantity').addEventListener('input', updateSummary);
+        document.getElementById('seat_category').addEventListener('change', updateSummary);
+
+        // Form validation
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') || false;
+            
+            if (!isLoggedIn) {
+                if (confirm('You need to login to book tickets. Redirect to login page?')) {
+                    localStorage.setItem('bookingData', JSON.stringify({
+                        matchId: document.getElementById('matchId').value,
+                        quantity: document.getElementById('quantity').value,
+                        seatCategory: document.getElementById('seat_category').value
+                    }));
+                    window.location.href = 'login.html?redirect=booking';
+                }
+                return;
+            }
+            
+            // Check payment method selected
+            const paymentSelected = document.querySelector('input[name="payment_method"]:checked');
+            if (!paymentSelected) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            // Show loading
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            // Submit form
+            setTimeout(() => {
+                this.submit();
+            }, 1500);
+        });
+
+        // Auto-fill user data if logged in
+        function autoFillUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            if (userData.full_name) {
+                document.getElementById('full_name').value = userData.full_name;
+            }
+            if (userData.email) {
+                document.getElementById('email').value = userData.email;
+            }
+            if (userData.phone) {
+                document.getElementById('phone').value = userData.phone;
+            }
+        }
+
+        // Call auto-fill on page load
+        autoFillUserData();
+    </script>
+</body>
+</html>
